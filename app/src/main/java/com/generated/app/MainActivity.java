@@ -24,6 +24,7 @@ import android.os.Handler;
 import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -174,8 +175,8 @@ public class MainActivity extends Activity {
 
         // Countdown Text
         countdownText = new TextView(this);
-        countdownText.setId(View.generateViewId(1)); // Use generateViewId() for API 17+
-        countdownText.setTextSize(56);
+        countdownText.setId(View.generateViewId(0)); // Unique ID
+        countdownText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 56);
         countdownText.setTextColor(Color.parseColor("#3F51B5")); // Indigo
         countdownText.setTypeface(null, android.graphics.Typeface.BOLD);
         countdownText.setGravity(Gravity.CENTER);
@@ -189,9 +190,9 @@ public class MainActivity extends Activity {
 
         // Date Label
         dateLabel = new TextView(this);
-        dateLabel.setId(View.generateViewId(2)); // Use generateViewId() for API 17+
+        dateLabel.setId(View.generateViewId(1)); // Unique ID
         dateLabel.setText(R.string.wedding_date_label);
-        dateLabel.setTextSize(18);
+        dateLabel.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
         dateLabel.setTextColor(Color.parseColor("#616161")); // Dark gray
         RelativeLayout.LayoutParams dateLabelParams = new RelativeLayout.LayoutParams(
                 RelativeLayout.LayoutParams.WRAP_CONTENT,
@@ -204,9 +205,9 @@ public class MainActivity extends Activity {
 
         // Date Input
         dateInput = new EditText(this);
-        dateInput.setId(View.generateViewId(3)); // Use generateViewId() for API 17+
+        dateInput.setId(View.generateViewId(2)); // Unique ID
         dateInput.setHint(R.string.date_input_hint);
-        dateInput.setTextSize(18);
+        dateInput.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
         dateInput.setPadding(16, 16, 16, 16);
         dateInput.setBackground(getResources().getDrawable(R.drawable.edit_text_background, null));
         dateInput.setGravity(Gravity.END); // Align text to the end for RTL
@@ -221,9 +222,9 @@ public class MainActivity extends Activity {
 
         // Set Date Button
         setDateButton = new Button(this);
-        setDateButton.setId(View.generateViewId(4)); // Use generateViewId() for API 17+
+        setDateButton.setId(View.generateViewId(3)); // Unique ID
         setDateButton.setText(R.string.set_date_button);
-        setDateButton.setTextSize(16);
+        setDateButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
         setDateButton.setPadding(32, 16, 32, 16);
         setDateButton.setBackground(getResources().getDrawable(R.drawable.button_background, null));
         setDateButton.setTextColor(Color.WHITE);
@@ -240,9 +241,9 @@ public class MainActivity extends Activity {
 
         // Clear Date Button
         clearDateButton = new Button(this);
-        clearDateButton.setId(View.generateViewId(11)); // Use generateViewId() for API 17+
+        clearDateButton.setId(View.generateViewId(4)); // Unique ID
         clearDateButton.setText(R.string.clear_date_button);
-        clearDateButton.setTextSize(16);
+        clearDateButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
         clearDateButton.setPadding(32, 16, 32, 16);
         clearDateButton.setBackground(getResources().getDrawable(R.drawable.button_secondary_background, null));
         clearDateButton.setTextColor(getResources().getColor(R.color.button_secondary_text_color, null));
@@ -259,7 +260,7 @@ public class MainActivity extends Activity {
 
         // Main Image View
         mainImageView = new ImageView(this);
-        mainImageView.setId(View.generateViewId(5)); // Use generateViewId() for API 17+
+        mainImageView.setId(View.generateViewId(5)); // Unique ID
         mainImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         mainImageView.setVisibility(View.GONE); // Initially hidden
         mainImageView.setOnClickListener(v -> selectMainImage());
@@ -274,9 +275,9 @@ public class MainActivity extends Activity {
 
         // Gallery Label
         TextView galleryLabel = new TextView(this);
-        galleryLabel.setId(View.generateViewId(6)); // Use generateViewId() for API 17+
+        galleryLabel.setId(View.generateViewId(6)); // Unique ID
         galleryLabel.setText(R.string.gallery_label);
-        galleryLabel.setTextSize(18);
+        galleryLabel.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
         galleryLabel.setTextColor(Color.parseColor("#616161")); // Dark gray
         RelativeLayout.LayoutParams galleryLabelParams = new RelativeLayout.LayoutParams(
                 RelativeLayout.LayoutParams.WRAP_CONTENT,
@@ -289,9 +290,9 @@ public class MainActivity extends Activity {
 
         // Add Gallery Image Button
         addGalleryImageButton = new Button(this);
-        addGalleryImageButton.setId(View.generateViewId(7)); // Use generateViewId() for API 17+
+        addGalleryImageButton.setId(View.generateViewId(7)); // Unique ID
         addGalleryImageButton.setText(R.string.add_gallery_image_button);
-        addGalleryImageButton.setTextSize(16);
+        addGalleryImageButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
         addGalleryImageButton.setPadding(32, 16, 32, 16);
         addGalleryImageButton.setBackground(getResources().getDrawable(R.drawable.button_background, null));
         addGalleryImageButton.setTextColor(Color.WHITE);
@@ -307,7 +308,7 @@ public class MainActivity extends Activity {
 
         // Gallery Layout (for displaying images)
         galleryLayout = new LinearLayout(this);
-        galleryLayout.setId(View.generateViewId(8)); // Use generateViewId() for API 17+
+        galleryLayout.setId(View.generateViewId(8)); // Unique ID
         galleryLayout.setOrientation(LinearLayout.HORIZONTAL);
         galleryLayout.setGravity(Gravity.CENTER_VERTICAL);
         galleryLayout.setPadding(0, 16, 0, 16);
@@ -325,8 +326,8 @@ public class MainActivity extends Activity {
 
         // Toggle Notifications Button
         toggleNotificationsButton = new Button(this);
-        toggleNotificationsButton.setId(View.generateViewId(9)); // Use generateViewId() for API 17+
-        toggleNotificationsButton.setTextSize(16);
+        toggleNotificationsButton.setId(View.generateViewId(9)); // Unique ID
+        toggleNotificationsButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
         toggleNotificationsButton.setPadding(32, 16, 32, 16);
         toggleNotificationsButton.setBackground(getResources().getDrawable(R.drawable.button_background, null));
         toggleNotificationsButton.setTextColor(Color.WHITE);
@@ -342,8 +343,8 @@ public class MainActivity extends Activity {
 
         // Set Notification Type Button
         setNotificationTypeButton = new Button(this);
-        setNotificationTypeButton.setId(View.generateViewId(10)); // Use generateViewId() for API 17+
-        setNotificationTypeButton.setTextSize(16);
+        setNotificationTypeButton.setId(View.generateViewId(10)); // Unique ID
+        setNotificationTypeButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
         setNotificationTypeButton.setPadding(32, 16, 32, 16);
         setNotificationTypeButton.setBackground(getResources().getDrawable(R.drawable.button_secondary_background, null));
         setNotificationTypeButton.setTextColor(getResources().getColor(R.color.button_secondary_text_color, null));

@@ -6,7 +6,7 @@
     <string name="set_date_button">קבע תאריך</string>
     <string name="clear_date_button">נקה תאריך</string>
     <string name="default_countdown_text">--.--</string>
-    <string name="days_left_label">נותרו %1$s ימים עד לחתונה בתאריך %2$s</string>
+    <string name="days_left_label">נותרו %1$d ימים עד לחתונה בתאריך %2$s</string>
     <string name="wedding_day_label">היום החתונה!</string>
     <string name="gallery_label">גלריית תמונות:</string>
     <string name="add_gallery_image_button">הוסף תמונה</string>
