@@ -28,4 +28,5 @@
     <string name="error_invalid_date">תאריך לא תקין</string>
     <string name="error_parsing_date">שגיאה בפיענוח התאריך</string>
     <string name="image_already_in_gallery">התמונה כבר קיימת בגלריה.</string>
+    <string name="image_removed">התמונה הוסרה מהגלריה.</string>
 </resources>

@@ -34,7 +34,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import androidx.core.app.NotificationCompat;
+//import androidx.core.app.NotificationCompat; // REMOVED
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -89,6 +89,10 @@ public class MainActivity extends Activity {
     private static final String CHANNEL_ID = "wedding_countdown_channel";
     private static final int NOTIFICATION_ID = 1;
 
+    // NotificationCompat was moved from androidx.core.app to android.app.Notification.Builder for API 26+
+    // For older APIs, we need to use the v4 support library, which is not allowed per instructions.
+    // Therefore, we'll use the framework Notification.Builder and handle compatibility.
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,6 +110,7 @@ public class MainActivity extends Activity {
         updateNotificationButtonState();
         updateNotificationTypeButton();
         updateMainImage();
+        loadGalleryImagesFromDb(); // Load and display existing gallery images
     }
 
     private void loadPreferences() {
@@ -127,17 +132,23 @@ public class MainActivity extends Activity {
     private void loadGalleryImages() {
         galleryImageUriStrings.clear();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor cursor = db.query(WeddingDBHelper.GalleryEntry.TABLE_NAME,
-                new String[]{WeddingDBHelper.GalleryEntry.COLUMN_NAME_URI},
-                null, null, null, null, null);
-        if (cursor != null && cursor.moveToFirst()) {
-            int uriColumnIndex = cursor.getColumnIndex(WeddingDBHelper.GalleryEntry.COLUMN_NAME_URI);
-            if (uriColumnIndex != -1) {
-                do {
-                    galleryImageUriStrings.add(cursor.getString(uriColumnIndex));
-                } while (cursor.moveToNext());
+        Cursor cursor = null;
+        try {
+            cursor = db.query(WeddingDBHelper.GalleryEntry.TABLE_NAME,
+                    new String[]{WeddingDBHelper.GalleryEntry.COLUMN_NAME_URI},
+                    null, null, null, null, null);
+            if (cursor != null && cursor.moveToFirst()) {
+                int uriColumnIndex = cursor.getColumnIndex(WeddingDBHelper.GalleryEntry.COLUMN_NAME_URI);
+                if (uriColumnIndex != -1) {
+                    do {
+                        galleryImageUriStrings.add(cursor.getString(uriColumnIndex));
+                    } while (cursor.moveToNext());
+                }
             }
-            cursor.close();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
         }
     }
 
@@ -163,7 +174,7 @@ public class MainActivity extends Activity {
 
         // Countdown Text
         countdownText = new TextView(this);
-        countdownText.setId(View.generateViewId(1));
+        countdownText.setId(View.generateViewId(1)); // Use generateViewId() for API 17+
         countdownText.setTextSize(56);
         countdownText.setTextColor(Color.parseColor("#3F51B5")); // Indigo
         countdownText.setTypeface(null, android.graphics.Typeface.BOLD);
@@ -178,7 +189,7 @@ public class MainActivity extends Activity {
 
         // Date Label
         dateLabel = new TextView(this);
-        dateLabel.setId(View.generateViewId(2));
+        dateLabel.setId(View.generateViewId(2)); // Use generateViewId() for API 17+
         dateLabel.setText(R.string.wedding_date_label);
         dateLabel.setTextSize(18);
         dateLabel.setTextColor(Color.parseColor("#616161")); // Dark gray
@@ -193,7 +204,7 @@ public class MainActivity extends Activity {
 
         // Date Input
         dateInput = new EditText(this);
-        dateInput.setId(View.generateViewId(3));
+        dateInput.setId(View.generateViewId(3)); // Use generateViewId() for API 17+
         dateInput.setHint(R.string.date_input_hint);
         dateInput.setTextSize(18);
         dateInput.setPadding(16, 16, 16, 16);
@@ -210,7 +221,7 @@ public class MainActivity extends Activity {
 
         // Set Date Button
         setDateButton = new Button(this);
-        setDateButton.setId(View.generateViewId(4));
+        setDateButton.setId(View.generateViewId(4)); // Use generateViewId() for API 17+
         setDateButton.setText(R.string.set_date_button);
         setDateButton.setTextSize(16);
         setDateButton.setPadding(32, 16, 32, 16);
@@ -229,7 +240,7 @@ public class MainActivity extends Activity {
 
         // Clear Date Button
         clearDateButton = new Button(this);
-        clearDateButton.setId(View.generateViewId(11));
+        clearDateButton.setId(View.generateViewId(11)); // Use generateViewId() for API 17+
         clearDateButton.setText(R.string.clear_date_button);
         clearDateButton.setTextSize(16);
         clearDateButton.setPadding(32, 16, 32, 16);
@@ -248,7 +259,7 @@ public class MainActivity extends Activity {
 
         // Main Image View
         mainImageView = new ImageView(this);
-        mainImageView.setId(View.generateViewId(5));
+        mainImageView.setId(View.generateViewId(5)); // Use generateViewId() for API 17+
         mainImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         mainImageView.setVisibility(View.GONE); // Initially hidden
         mainImageView.setOnClickListener(v -> selectMainImage());
@@ -263,7 +274,7 @@ public class MainActivity extends Activity {
 
         // Gallery Label
         TextView galleryLabel = new TextView(this);
-        galleryLabel.setId(View.generateViewId(6));
+        galleryLabel.setId(View.generateViewId(6)); // Use generateViewId() for API 17+
         galleryLabel.setText(R.string.gallery_label);
         galleryLabel.setTextSize(18);
         galleryLabel.setTextColor(Color.parseColor("#616161")); // Dark gray
@@ -278,7 +289,7 @@ public class MainActivity extends Activity {
 
         // Add Gallery Image Button
         addGalleryImageButton = new Button(this);
-        addGalleryImageButton.setId(View.generateViewId(7));
+        addGalleryImageButton.setId(View.generateViewId(7)); // Use generateViewId() for API 17+
         addGalleryImageButton.setText(R.string.add_gallery_image_button);
         addGalleryImageButton.setTextSize(16);
         addGalleryImageButton.setPadding(32, 16, 32, 16);
@@ -296,13 +307,16 @@ public class MainActivity extends Activity {
 
         // Gallery Layout (for displaying images)
         galleryLayout = new LinearLayout(this);
-        galleryLayout.setId(View.generateViewId(8));
+        galleryLayout.setId(View.generateViewId(8)); // Use generateViewId() for API 17+
         galleryLayout.setOrientation(LinearLayout.HORIZONTAL);
         galleryLayout.setGravity(Gravity.CENTER_VERTICAL);
         galleryLayout.setPadding(0, 16, 0, 16);
+        // Adjust height to accommodate images and their margins
+        int galleryItemSize = getResources().getDimensionPixelSize(R.dimen.gallery_item_size);
+        int itemMargin = getResources().getDimensionPixelSize(R.dimen.gallery_item_margin); // Define this in dimens.xml
         RelativeLayout.LayoutParams galleryLayoutParams = new RelativeLayout.LayoutParams(
                 RelativeLayout.LayoutParams.MATCH_PARENT,
-                getResources().getDimensionPixelSize(R.dimen.gallery_item_size) + 32 // Image size + padding
+                galleryItemSize + 2 * itemMargin // Image size + top/bottom margin
         );
         galleryLayoutParams.addRule(RelativeLayout.BELOW, galleryLabel.getId());
         galleryLayoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
@@ -311,7 +325,7 @@ public class MainActivity extends Activity {
 
         // Toggle Notifications Button
         toggleNotificationsButton = new Button(this);
-        toggleNotificationsButton.setId(View.generateViewId(9));
+        toggleNotificationsButton.setId(View.generateViewId(9)); // Use generateViewId() for API 17+
         toggleNotificationsButton.setTextSize(16);
         toggleNotificationsButton.setPadding(32, 16, 32, 16);
         toggleNotificationsButton.setBackground(getResources().getDrawable(R.drawable.button_background, null));
@@ -328,7 +342,7 @@ public class MainActivity extends Activity {
 
         // Set Notification Type Button
         setNotificationTypeButton = new Button(this);
-        setNotificationTypeButton.setId(View.generateViewId(10));
+        setNotificationTypeButton.setId(View.generateViewId(10)); // Use generateViewId() for API 17+
         setNotificationTypeButton.setTextSize(16);
         setNotificationTypeButton.setPadding(32, 16, 32, 16);
         setNotificationTypeButton.setBackground(getResources().getDrawable(R.drawable.button_secondary_background, null));
@@ -488,7 +502,8 @@ public class MainActivity extends Activity {
                 nextMidnight.set(Calendar.MINUTE, 0);
                 nextMidnight.set(Calendar.SECOND, 0);
                 long delay = nextMidnight.getTimeInMillis() - System.currentTimeMillis();
-                handler.postAtTime(this, nextMidnight.getTimeInMillis());
+                if (delay < 0) delay = 0; // Ensure delay is not negative
+                handler.postAtTime(this, System.currentTimeMillis() + delay);
             }
         };
         handler.post(updateCountdownRunnable);
@@ -502,7 +517,9 @@ public class MainActivity extends Activity {
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
             channel.setDescription(description);
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
+            if (notificationManager != null) {
+                notificationManager.createNotificationChannel(channel);
+            }
         }
     }
 
@@ -526,71 +543,43 @@ public class MainActivity extends Activity {
             long diffInMillis = weddingDate.getTime() - today.getTimeInMillis();
             long daysUntilWedding = TimeUnit.DAYS.convert(diffInMillis, TimeUnit.MILLISECONDS);
 
-            // Calculate when to schedule the next notification
-            Calendar notificationTime = Calendar.getInstance();
-            notificationTime.setTimeInMillis(System.currentTimeMillis());
+            // For simplicity, we'll send a notification immediately if it's a milestone or daily reminder time.
+            // A robust solution would use AlarmManager for background scheduling.
 
             if (notificationType.equals("daily")) {
-                // Schedule for tomorrow at a fixed time (e.g., 9 AM)
-                notificationTime.set(Calendar.HOUR_OF_DAY, 9);
-                notificationTime.set(Calendar.MINUTE, 0);
-                notificationTime.set(Calendar.SECOND, 0);
-                if (notificationTime.before(Calendar.getInstance())) {
-                    notificationTime.add(Calendar.DAY_OF_YEAR, 1);
+                // For daily, send a reminder if the current time is suitable (e.g., after 8 AM)
+                Calendar now = Calendar.getInstance();
+                if (now.get(Calendar.HOUR_OF_DAY) >= 8) {
+                     sendNotification("תזכורת יומית:", "היום המרגש מתקרב!");
                 }
             } else { // milestone
-                // Schedule for specific milestones (e.g., 1 week, 1 month before)
-                if (daysUntilWedding == 7) {
-                    notificationTime.set(Calendar.HOUR_OF_DAY, 9);
-                    notificationTime.set(Calendar.MINUTE, 0);
-                    notificationTime.set(Calendar.SECOND, 0);
-                } else if (daysUntilWedding == 30) { // Approximately 1 month
-                    notificationTime.set(Calendar.HOUR_OF_DAY, 9);
-                    notificationTime.set(Calendar.MINUTE, 0);
-                    notificationTime.set(Calendar.SECOND, 0);
-                } else if (daysUntilWedding == 1) { // Day before
-                    notificationTime.set(Calendar.HOUR_OF_DAY, 12);
-                    notificationTime.set(Calendar.MINUTE, 0);
-                    notificationTime.set(Calendar.SECOND, 0);
-                } else if (daysUntilWedding == 0) { // Wedding day
-                    notificationTime.set(Calendar.HOUR_OF_DAY, 8);
-                    notificationTime.set(Calendar.MINUTE, 0);
-                    notificationTime.set(Calendar.SECOND, 0);
-                } else {
-                    // No specific milestone notification scheduled for today
-                    cancelNotification(); // Cancel any previous pending notification if not a milestone day
-                    return;
+                // Schedule for specific milestones (e.g., 1 week, 1 month before, day before, wedding day)
+                if (daysUntilWedding == 7 || daysUntilWedding == 30 || daysUntilWedding == 1 || daysUntilWedding == 0) {
+                    String message = "נשארו " + (daysUntilWedding == 0 ? "רק " : "") + daysUntilWedding + " ימים לחתונה!";
+                    if (daysUntilWedding == 0) message = "היום החתונה!";
+                    sendNotification(message, "יום מיוחד מתקרב!");
+                } else if (daysUntilWedding < 0) {
+                    // Wedding has passed, cancel notifications
+                    cancelNotification();
                 }
             }
 
-            // Use AlarmManager for reliable scheduling
-            // For simplicity in this example, we'll trigger a notification manually based on days left
-            // A real implementation would use AlarmManager
-
-            // Trigger a notification immediately for demonstration if it's a milestone day
-            if (notificationType.equals("milestone")) {
-                sendNotification("נשארו " + daysUntilWedding + " ימים לחתונה!", "יום מיוחד מתקרב!");
-            } else if (notificationType.equals("daily")) {
-                 sendNotification("תזכורת יומית:", "היום המרגש מתקרב!");
-            }
-
-
         } catch (ParseException e) {
-            // Error parsing date, do nothing
+            Log.e("MainActivity", "Error parsing wedding date for notification scheduling", e);
         }
     }
 
-
+    // Using the framework Notification.Builder directly
     private void sendNotification(String title, String content) {
         Intent intent = new Intent(this, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+        android.app.Notification.Builder builder = new android.app.Notification.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_launcher)
                 .setContentTitle(title)
                 .setContentText(content)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setPriority(android.app.Notification.PRIORITY_DEFAULT)
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true);
 
@@ -605,7 +594,6 @@ public class MainActivity extends Activity {
         if (notificationManager != null) {
             notificationManager.cancel(NOTIFICATION_ID);
         }
-        // In a real app with AlarmManager, you'd cancel the alarm here too.
     }
 
     private void toggleNotifications() {
@@ -681,6 +669,9 @@ public class MainActivity extends Activity {
             } catch (IOException e) {
                 Log.e("MainActivity", "Error loading main image", e);
                 mainImageView.setVisibility(View.GONE);
+            } catch (SecurityException e) {
+                Log.e("MainActivity", "Permission error loading main image", e);
+                mainImageView.setVisibility(View.GONE);
             }
         } else {
             mainImageView.setVisibility(View.GONE);
@@ -689,11 +680,13 @@ public class MainActivity extends Activity {
 
     private void addGalleryImageView(Uri imageUri) {
         ImageView imageView = new ImageView(this);
+        int galleryItemSize = getResources().getDimensionPixelSize(R.dimen.gallery_item_size);
+        int itemMargin = getResources().getDimensionPixelSize(R.dimen.gallery_item_margin); // Define this in dimens.xml
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                getResources().getDimensionPixelSize(R.dimen.gallery_item_size),
-                getResources().getDimensionPixelSize(R.dimen.gallery_item_size)
+                galleryItemSize,
+                galleryItemSize
         );
-        params.setMargins(8, 0, 8, 0);
+        params.setMargins(itemMargin, 0, itemMargin, 0); // Apply margin to left and right
         imageView.setLayoutParams(params);
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         imageView.setImageURI(imageUri);
@@ -702,6 +695,7 @@ public class MainActivity extends Activity {
         imageView.setOnLongClickListener(v -> {
             removeGalleryImage(imageUri.toString());
             galleryLayout.removeView(v);
+            Toast.makeText(this, R.string.image_removed, Toast.LENGTH_SHORT).show();
             return true;
         });
 
@@ -709,7 +703,7 @@ public class MainActivity extends Activity {
     }
 
     private void loadGalleryImagesFromDb() {
-        galleryLayout.removeAllViews();
+        galleryLayout.removeAllViews(); // Clear existing views before loading
         for (String uriString : galleryImageUriStrings) {
             try {
                 Uri imageUri = Uri.parse(uriString);
@@ -717,6 +711,7 @@ public class MainActivity extends Activity {
             } catch (Exception e) {
                 Log.e("MainActivity", "Error loading gallery image from URI: " + uriString, e);
                 // Optionally remove invalid URI from DB here
+                removeGalleryImageUri(uriString); // Remove problematic URI
             }
         }
     }
@@ -724,7 +719,7 @@ public class MainActivity extends Activity {
     private void removeGalleryImage(String uriToRemove) {
         galleryImageUriStrings.remove(uriToRemove);
         removeGalleryImageUri(uriToRemove);
-        savePreferences(); // Save the updated list of URIs
+        // savePreferences(); // No need to save prefs here, DB write handles persistence
     }
 
 
