@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">My Wedding Countdown</string>
+    <string name="wedding_date_label">תאריך החתונה:</string>
+    <string name="date_input_hint">DD/MM/YYYY</string>
+    <string name="set_date_button">קבע תאריך</string>
+    <string name="clear_date_button">נקה תאריך</string>
+    <string name="default_countdown_text">--.--</string>
+    <string name="days_left_label">נותרו %1$s ימים עד לחתונה בתאריך %2$s</string>
+    <string name="wedding_day_label">היום החתונה!</string>
+    <string name="gallery_label">גלריית תמונות:</string>
+    <string name="add_gallery_image_button">הוסף תמונה</string>
+    <string name="disable_notifications_button">כבה התראות</string>
+    <string name="enable_notifications_button">הפעל התראות</string>
+    <string name="notification_type_daily">התראות יומיות</string>
+    <string name="notification_type_milestone">התראות ציון דרך</string>
+    <string name="channel_name">Wedding Countdown Notifications</string>
+    <string name="channel_description">Notifications for your wedding countdown</string>
+    <string name="error_date_empty">אנא הזן תאריך חתונה.</string>
+    <string name="error_date_format">פורמט תאריך שגוי. אנא השתמש ב-DD/MM/YYYY.</string>
+    <string name="error_date_past_or_today">התאריך חייב להיות עתידי.</string>
+    <string name="date_set_success">תאריך החתונה נקבע בהצלחה!</string>
+    <string name="date_cleared">תאריך החתונה נוקה.</string>
+    <string name="notifications_enabled">ההתראות מופעלות.</string>
+    <string name="notifications_disabled">ההתראות כבויות.</string>
+    <string name="notification_type_set_daily">סוג ההתראה הוגדר ליומי.</string>
+    <string name="notification_type_set_milestone">סוג ההתראה הוגדר לציון דרך.</string>
+    <string name="error_invalid_date">תאריך לא תקין</string>
+    <string name="error_parsing_date">שגיאה בפיענוח התאריך</string>
+    <string name="image_already_in_gallery">התמונה כבר קיימת בגלריה.</string>
+</resources>

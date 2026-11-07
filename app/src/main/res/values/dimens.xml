@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="edit_text_width">200dp</dimen>
+    <dimen name="main_image_height">250dp</dimen>
+    <dimen name="gallery_item_size">80dp</dimen>
+</resources>
